@@ -3,7 +3,7 @@ import { Card, CardImg, CardImgOverlay,
      CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem,  Button, Modal, ModalHeader, ModalBody, Label, Row , Col } from 'reactstrap';
 import {Control, LocalForm, Errors} from 'react-redux-form' ;
 import {Link} from 'react-router-dom';
-
+import {Loading} from './LoadingComponent';
 const maxLength = (len) => (val) =>!(val) || (val.length <= len);
 const minLength = (len) => (val) => (val) && (val.length >= len);
 
@@ -31,9 +31,9 @@ class CommentForm extends Component{
         event.preventDefault();
     }
     handleSubmit(values){
-        console.log("Current state is: " + JSON.stringify(values));
-        alert("Current state is: " + JSON.stringify(values));
-    }
+        this.toggleModal();
+        this.props.addComment(this.props.dishId,values.rating,values.author, values.comment)
+}
     render(){
         return (
             <div>
@@ -46,7 +46,7 @@ class CommentForm extends Component{
                         <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
                             <Row>
                             <Col>
-                                <Label htmlFor=".rating">Rating</Label>
+                                <Label htmlFor="rating">Rating</Label>
                             </Col>
                             </Row>
                             <Row>
@@ -63,7 +63,7 @@ class CommentForm extends Component{
                             </Row>
                             <Row>
                             <Col>
-                                <Label htmlFor=".name">Your Name</Label>
+                                <Label htmlFor="name">Your Name</Label>
                             </Col>
                             </Row>
                             <Row>
@@ -87,7 +87,7 @@ class CommentForm extends Component{
                             </Row>
                             <Row>
                                 <Col>
-                                <Label htmlFor=".comment">Your Feedback</Label>
+                                <Label htmlFor="comment">Your Feedback</Label>
                                 </Col>
                             </Row>
                             <Row>
@@ -135,7 +135,7 @@ function RenderDish({dish}){
     }
 }
 
-function RenderComments({comments}) {
+function RenderComments({comments , addComment, dishId}) {
     if(comments != null){
     const commentslis = comments.map((commentblock)=>{
         return  (
@@ -150,7 +150,7 @@ function RenderComments({comments}) {
             <h4>Comments</h4>
             <ul className="list-unstyled">
                 { commentslis }
-                <CommentForm />
+                <CommentForm dishId ={dishId} addComment ={addComment} />
             </ul>
         </div> 
     );
@@ -164,6 +164,25 @@ function RenderComments({comments}) {
 
   
  const  DishDetail = (props) => {
+    if(props.isLoading){
+        return(
+                <div className = "container">
+                    <div className = "row">
+                        <Loading />
+                    </div>
+                </div>
+        );
+    }
+    else if (props.errMess) {
+        return(
+            <div className = "container">
+                <div className = "row">
+                    <h4>{props.errorMess}</h4>
+                </div>
+            </div>
+    );
+    }
+    else 
         if(props.dish != null){
         return (
             <div className="container">
@@ -182,7 +201,9 @@ function RenderComments({comments}) {
                             <RenderDish dish = {props.dish} />
                         </div>
                         <div className = "col-md-5 m-1 col-12">
-                            <RenderComments comments = {props.comments} />
+                            <RenderComments comments = {props.comments} 
+                            addComment = {props.addComment}
+                            dishId={props.dish.id} />
                         </div>
                  </div>
         </div>    
