@@ -4,6 +4,8 @@ import { Card, CardImg, CardImgOverlay,
 import {Control, LocalForm, Errors} from 'react-redux-form' ;
 import {Link} from 'react-router-dom';
 import {Loading} from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
+
 const maxLength = (len) => (val) =>!(val) || (val.length <= len);
 const minLength = (len) => (val) => (val) && (val.length >= len);
 
@@ -119,7 +121,7 @@ function RenderDish({dish}){
     {
         return (
             <Card>
-                <CardImg width="100%" object src={dish.image} alt={dish.name} /> 
+                <CardImg width="100%" object src={baseUrl + dish.image} alt={dish.name} /> 
                 <CardBody>
                 <CardTitle>{dish.name}</CardTitle>  
                 <CardText>{dish.description}</CardText>
@@ -165,7 +167,7 @@ function RenderComments({comments , addComment, dishId}) {
   
  const  DishDetail = (props) => {
     if(props.isLoading){
-        return(
+        return (
                 <div className = "container">
                     <div className = "row">
                         <Loading />
@@ -174,16 +176,15 @@ function RenderComments({comments , addComment, dishId}) {
         );
     }
     else if (props.errMess) {
-        return(
+        return (
             <div className = "container">
                 <div className = "row">
                     <h4>{props.errorMess}</h4>
                 </div>
             </div>
     );
-    }
-    else 
-        if(props.dish != null){
+    }  
+    else if(props.dish != null){
         return (
             <div className="container">
                  <div className="row">
