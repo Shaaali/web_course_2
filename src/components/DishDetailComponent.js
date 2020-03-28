@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardImg, CardImgOverlay,
+import { Card, CardImg, 
      CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem,  Button, Modal, ModalHeader, ModalBody, Label, Row , Col } from 'reactstrap';
 import {Control, LocalForm, Errors} from 'react-redux-form' ;
 import {Link} from 'react-router-dom';
@@ -189,7 +189,7 @@ function RenderComments({comments , postComment, dishId}) {
         return (
             <div className = "container">
                 <div className = "row">
-                    <h4>{props.errorMess}</h4>
+                    <h4>{props.errMess}</h4>
                 </div>
             </div>
     );
